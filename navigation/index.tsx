@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import HomeScreen from "../screens/HomeScreen";
 import PlannerScreen from "../screens/PlannerScreen";
+import WorkoutDetailScreen from "../screens/WorkoutDetailScreen";
 
 export default function Navigation() {
     return (<NavigationContainer>
@@ -19,6 +20,10 @@ function RootNavigator() {
         name="Root" 
         component={BottomTabNavigator} 
         options={{ headerShown: false }} />
+    <Stack.Screen 
+        name="WorkoutDetail" 
+        component={WorkoutDetailScreen}
+        options={{ title: "" }} />
 </Stack.Navigator>)
 }
 
