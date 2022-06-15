@@ -7,7 +7,6 @@ export default function useCachedResources() {
     useEffect(() => {
         async function loadResourcesAndDataAsync() {
             try {
-                await initWorkout();
                 await Font.loadAsync({
                     "montserrat": require("../assets/fonts/Montserrat-Regular.ttf"),
                     "montserrat-bold": require("../assets/fonts/Montserrat-Bold.ttf")

@@ -2,11 +2,13 @@ import { FontAwesome } from "@expo/vector-icons";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { View, StyleSheet, Modal, Text } from "react-native";
 import { ScheduleModal } from "../components/styled/Modal";
-import { MontserratText } from "../components/styled/MontserratText";
 import { PressableText } from "../components/styled/PressableText";
 import WorkoutItem from "../components/WorkoutItem";
 import { useWorkoutBySlug } from "../hooks/useWorkoutBySlug";
 import { formatSec } from "../utils/time";
+import { useEffect, useState } from 'react';
+import { SequenceItem } from "../types/data";
+import { useCountDown } from "../hooks/useCountDown";
 type DetailPrams = {
     route: {
         params: {
@@ -18,10 +20,37 @@ type DetailPrams = {
 type NavigationType = NativeStackHeaderProps & DetailPrams;
 
 export default function WorkoutDetailScreen({ route }: NavigationType) {
+    const [ sequence, setSequence] = useState<SequenceItem[]>([]);
+    const [ trackerIdx, setTrackerIdx] = useState(-1);
     const workout = useWorkoutBySlug(route.params.slug);
+    const { countDown, isRunning, stop, start } = useCountDown(trackerIdx);
+    const addItemToSequence = (idx: number) => {
+        let newSequence = [];
+        if(idx > 0) {
+            newSequence = [...sequence, workout!.sequence[idx]];
+        } else {
+            newSequence = [workout!.sequence[idx]]
+        }
+        setSequence(newSequence);
+        setTrackerIdx(idx);
+        start(newSequence[idx].duration);
+    }
+
+    useEffect(() => {
+        if(!workout) return;
+        if(trackerIdx === workout.sequence.length - 1) return;
+        if(countDown === 0) {
+            addItemToSequence(trackerIdx + 1);
+        }
+
+    }, [countDown]);
+
     if(!workout) {
         return null;
     }
+
+    const hasReachedEnd = sequence.length === workout.sequence.length && countDown === 0;
+
     return (
         <View style={styles.container}>
             <WorkoutItem item={workout} childStyles={{ marginTop: 10 }}>
@@ -46,6 +75,41 @@ export default function WorkoutDetailScreen({ route }: NavigationType) {
                     </View>
                 </ScheduleModal>
             </WorkoutItem>
+            <View style={styles.counterUI}>
+                <View style={styles.counterItem}>
+                    { sequence.length === 0  
+                        ?   <FontAwesome name="play-circle-o" size={100} onPress={() => addItemToSequence(0)} />
+                        : isRunning 
+                        ?    <FontAwesome name="stop-circle-o" size={100} onPress={() => stop()} />
+                        : <FontAwesome name="play-circle-o" size={100} onPress={() => {
+                                if(hasReachedEnd) {
+                                    addItemToSequence(0)
+                                } else {
+                                    start(countDown);
+                                }
+                            }} 
+                        />
+                    }
+                </View>
+                {
+                    sequence.length > 0 && countDown >= 0 &&
+                    <View style={styles.counterItem}>
+                        <View>
+                            <Text style={{ fontSize: 55 }}>{countDown}</Text>
+                        </View>
+                    </View>
+                }
+            </View>
+            <View style={{ alignItems: "center"}}>
+                <Text style={{ fontSize: 60, fontWeight: "bold" }}>
+                    {
+                        sequence.length === 0 ?
+                            "Prepare" :
+                            hasReachedEnd ?
+                            "Great Job!" : sequence[trackerIdx].name
+                    }
+                </Text>
+            </View>
         </View>
     )
 }
@@ -62,6 +126,16 @@ const styles = StyleSheet.create({
         fontFamily: "montserrat-bold"
     },
     sequenceItem: {
+        alignItems: "center"
+    },
+    counterUI: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        marginBottom: 20
+    },
+    counterItem: {
+        flex: 1,
         alignItems: "center"
     }
 });
