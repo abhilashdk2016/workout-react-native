@@ -2,15 +2,16 @@ import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { View, StyleSheet, FlatList, Pressable } from "react-native";
 import { MontserratText } from "../components/styled/MontserratText";
 import WorkoutItem from "../components/WorkoutItem";
-import data from '../data.json';
-import { Workout } from '../types/data';
+import { useWorkouts } from "../hooks/useWorkouts";
 
 export default function HomeScreen({ navigation }: NativeStackHeaderProps) {
+    const workouts = useWorkouts();
+
     return (
         <View style={styles.container}>
             <MontserratText style={{ fontSize: 30, marginBottom: 20, fontWeight: "bold" }}>New Workouts</MontserratText>
             <FlatList 
-                data={data as Workout[]}
+                data={workouts}
                 keyExtractor={item => item.slug}
                 renderItem={({ item }) => {
                     return (
