@@ -1,5 +1,5 @@
 import { FunctionComponent, ReactNode, useState } from "react";
-import { View, Text, Modal, StyleSheet } from "react-native";
+import { View, Modal, StyleSheet } from "react-native";
 import { PressableText } from "./PressableText";
 
 type ModalProps = {
@@ -32,7 +32,7 @@ export function ScheduleModal({ activator: Activator, children } : ModalProps) {
                     {children({ handleOpen, handleClose})}
                 </View>
                 
-                <PressableText onPress={() => handleClose} text="Close" />
+                <PressableText onPress={handleClose} text="Close" />
             </View>
         </Modal>
         </>
