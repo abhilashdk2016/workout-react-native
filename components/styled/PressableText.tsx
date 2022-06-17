@@ -1,10 +1,11 @@
-import { Text, Pressable, PressableProps } from "react-native";
-type PressableTextProps = {
+import { Text, Pressable, PressableProps, TextStyle, StyleProp } from "react-native";
+export type PressableTextProps = {
     text: string;
+    style?: StyleProp<TextStyle>
 }
 type PressableTextPropsType = PressableProps & PressableTextProps;
 export function PressableText(props: PressableTextPropsType) {
     return (<Pressable {...props}>
-        <Text style={{ textDecorationLine: "underline" }}>{props.text}</Text>
+        <Text style={[props.style, { textDecorationLine: "underline" }]}>{props.text}</Text>
     </Pressable>)
 }

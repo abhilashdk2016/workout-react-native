@@ -3,13 +3,14 @@ import { View, StyleSheet, FlatList, Pressable } from "react-native";
 import { MontserratText } from "../components/styled/MontserratText";
 import WorkoutItem from "../components/WorkoutItem";
 import { useWorkouts } from "../hooks/useWorkouts";
+import { ThemeText } from "../components/styled/Text";
 
 export default function HomeScreen({ navigation }: NativeStackHeaderProps) {
     const workouts = useWorkouts();
 
     return (
         <View style={styles.container}>
-            <MontserratText style={{ fontSize: 30, marginBottom: 20, fontWeight: "bold" }}>New Workouts</MontserratText>
+            <ThemeText style={{ fontSize: 30, marginBottom: 20, fontWeight: "bold" }}>New Workouts</ThemeText>
             <FlatList 
                 data={workouts}
                 keyExtractor={item => item.slug}
