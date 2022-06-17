@@ -56,6 +56,7 @@ export default function WorkoutDetailScreen({ route }: NavigationType) {
         <View style={styles.container}>
             <WorkoutItem item={workout} childStyles={{ marginTop: 10 }}>
                 <ScheduleModal activator={({ handleOpen }) => <PressableText onPress={handleOpen} text="Check Sequence" />}>
+                 { () => 
                     <View>
                         {
                             workout.sequence.map((si, index) => 
@@ -74,6 +75,7 @@ export default function WorkoutDetailScreen({ route }: NavigationType) {
                             )
                         }
                     </View>
+                 }
                 </ScheduleModal>
             </WorkoutItem>
             <View style={styles.wrapper}>

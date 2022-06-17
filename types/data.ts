@@ -1,5 +1,11 @@
 export type Difficulty = "easy" | "normal" | "hard";
 export type SequenceType = "exercise" | "strecth" | "break";
+export type ExerciseFormData = {
+    name: string,
+    duration: string,
+    reps?: string,
+    type: string
+}
 export interface SequenceItem {
     slug: string,
     name: string,
@@ -14,3 +20,7 @@ export interface Workout {
     difficulty: Difficulty,
     sequence: Array<SequenceItem>
 }
+
+export type WorkoutFormData = {
+    name: string
+  }

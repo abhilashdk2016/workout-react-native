@@ -3,7 +3,10 @@ import { View, Text, Modal, StyleSheet } from "react-native";
 import { PressableText } from "./PressableText";
 
 type ModalProps = {
-    children: ReactNode,
+    children: FunctionComponent<{
+        handleOpen: () => void,
+        handleClose: () => void
+    }>,
     activator?: FunctionComponent<
         {
             handleOpen: () => void
@@ -13,21 +16,23 @@ type ModalProps = {
 
 export function ScheduleModal({ activator: Activator, children } : ModalProps) {
     const [isModalVisible, setModalVisible] = useState(false);
+    const handleOpen = () => setModalVisible(true)
+    const handleClose = () => setModalVisible(false)
     return (
         <>
         { Activator ? <Activator
             handleOpen={() => setModalVisible(true)}
-        /> : <PressableText onPress={() => setModalVisible(!isModalVisible)} text="Open" /> }
+        /> : <PressableText onPress={() => handleOpen} text="Open" /> }
         <Modal
             visible={isModalVisible}
             animationType="slide"
         >
             <View style={styles.centeredView}>
                 <View style={styles.contentView}>
-                    {children}
+                    {children({ handleOpen, handleClose})}
                 </View>
                 
-                <PressableText onPress={() => setModalVisible(!isModalVisible)} text="Close" />
+                <PressableText onPress={() => handleClose} text="Close" />
             </View>
         </Modal>
         </>
